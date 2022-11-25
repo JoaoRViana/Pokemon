@@ -10,7 +10,7 @@ let attempts = 3
 let word = ''
 
 const randomNumber = ()=>{
-    const number = Math.round((Math.random()*251)+1)
+    const number = Math.round((Math.random()*251))
     return number.toString()
 }
 const cleanScreen = ()=>{
@@ -31,7 +31,7 @@ const win =()=>{
 const loose = ()=>{
     const button = document.querySelector('#buttonAnswer')
     button.innerHTML = `Você errou mais sorte da próxima vez
-    o pokemon era o: ${word}`
+    o pokemon era o: <b>${word}</b>`
 }
 const getPokemon = async(pokemonNumber)=>{
     const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`)
@@ -47,7 +47,7 @@ const pokemonRender = async(pokemonNumber)=>{
     img.style.filter = 'brightness(0%)'
     body.style.background =' url("imagens/deepForest.png") no-repeat'
     body.style.backgroundSize = 'cover'
-    body.style.height = '100vh'
+    body.style.maxheight = '100vh'
     gameContainer.appendChild(img)
     title.style.display = 'none'
     menuContainer.style.display = 'none'
@@ -56,10 +56,8 @@ const pokemonRender = async(pokemonNumber)=>{
 }
 const catchValues = (event)=>{
     const proximo = event.target.nextSibling
-    if(event.target.value.length >0){
-        if(proximo !== null){
-            proximo.focus()
-        }
+    if(event.target.value.length >0 && proximo !== null){
+        proximo.focus()
     }
 }
 const cleanTextArea = () =>{
@@ -83,6 +81,7 @@ const endGame =  async()=>{
 
 const sendAnswer = ()=>{
     const paragrafs = document.querySelectorAll('.line')
+    const pokeballs = document.querySelector('#pokeballs')
     for(let i = 0;i<paragrafs.length ;i+=1){
         answer.push(paragrafs[i].value)
     }
@@ -95,6 +94,7 @@ const sendAnswer = ()=>{
     }else{
         answer = []
         attempts -=1
+        pokeballs.innerHTML = `x${attempts}`
         cleanTextArea()
     }
     if(correctAnswer === true || attempts <1){
@@ -109,7 +109,6 @@ const secretWord = async() =>{
     word = await pokemonRender(randomNumber())
     let secretWord = []
     const lettersContainer = document.createElement('div')
-    
     gameContainer.appendChild(lettersContainer)
     lettersContainer.style.display ='flex'
     lettersContainer.style.justifyContent = 'center'
@@ -120,11 +119,22 @@ const secretWord = async() =>{
         lettersContainer.appendChild(line)
         line.addEventListener('keyup',catchValues)
     }
+    
     const button = document.createElement('button')
     button.id = 'buttonAnswer'
     button.innerHTML = 'Enviar Resposta'
     button.addEventListener('click',sendAnswer)
     gameContainer.appendChild(button)
+    const pokeballs = document.createElement('p')
+    const imgPokeballs = document.createElement('img')
+    imgPokeballs.id = 'imgPokeballs'
+    imgPokeballs.src = './imagens/pokeball.png'
+    pokeballs.id = 'pokeballs'
+    pokeballs.innerHTML = `x${attempts}`
+    const br = document.createElement('br')
+    gameContainer.appendChild(br)
+    gameContainer.appendChild(pokeballs)
+    gameContainer.appendChild(imgPokeballs)
     const arr = [secretWord,word]
     return arr
 }
