@@ -28,6 +28,7 @@ body{
 }
 
 #title {
+    padding: 20px;
     font-size: 50px;
     color: #b22222;
     font-style: italic;
@@ -38,7 +39,7 @@ body{
 }
 
 
-.menuButton {
+#playGame {
     width: 150px;
     height: 100px;
     background-color: #f4f9fc;
@@ -50,10 +51,24 @@ body{
     color:#ff8b32 ;
 }
 
-.menuButton:hover {
+@keyframes escurecer {
+    to {
+        filter: brightness(0%)
+    }
+    to{
+        background : rgb(0,0,0)
+    }
+}
+
+#playGame:hover {
     background-color: #ff8b32;
     color: #f4f9fc;
 
+}
+#playGame:active {
+    width: 130px;
+    height: 80px;
+    box-shadow: inset 3px black;
 }
 
 .pokemon {

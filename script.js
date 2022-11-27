@@ -10,18 +10,17 @@ let attempts = 3
 let word = ''
 
 const randomNumber = ()=>{
-    const number = Math.round((Math.random()*251))
+    const number = Math.round((Math.random()*151))
     return number.toString()
 }
 
 
 const cleanScreen = ()=>{
+    darkness(renderMenu)
     answer = []
     attempts = 3
     correctAnswer = false
-    const son = document.querySelector('#gameContainer')
-    game.removeChild(son)
-    loadScreen(renderMenu)
+    buttonPlay.disabled = false
 }
 const renderMenu = ()=>{
     const gifLoad = document.querySelector('.gifLoad')
@@ -34,20 +33,31 @@ const renderMenu = ()=>{
 
 }
 
-const loadScreen = (afterLoad)=>{
-    const oldGif = document.querySelectorAll('.gifLoad')
-    if(oldGif.length >0){
-        oldGif[0].remove()
+const darkness = (afterLoad) =>{
+    body.style.animation = '0.5s ease-in escurecer 0.5s'
+    const loadScreen = ()=>{
+        const oldGif = document.querySelectorAll('.gifLoad')
+        if(oldGif.length >0){
+            oldGif[0].remove()
+        }
+        if(game.children.length >0){
+            const son = document.querySelector('#gameContainer')
+            game.removeChild(son)
+        }
+        const gifLoad = document.createElement('img')
+        menuContainer.style.display = 'none'
+        title.style.display = 'none'
+        gifLoad.src = './imagens/load.gif'
+        gifLoad.className = 'gifLoad'
+        body.style.background = '#000'
+        body.appendChild(gifLoad)
+        body.style.animation = ''
+        return setTimeout(afterLoad,1000)
     }
-    const gifLoad = document.createElement('img')
-    menuContainer.style.display = 'none'
-    title.style.display = 'none'
-    gifLoad.src = './imagens/load.gif'
-    gifLoad.className = 'gifLoad'
-    body.style.background = '#000'
-    body.appendChild(gifLoad)
-    return setTimeout(afterLoad,1000)
+    setTimeout(loadScreen,1000)
 }
+
+
 const win =()=>{
     const button = document.querySelector('#buttonAnswer')
     button.innerHTML = 'Parabéns você acertou'
@@ -85,10 +95,15 @@ const pokemonRender = async(pokemonNumber)=>{
     return name
 }
 
-const catchValues = (event)=>{
-    const proximo = event.target.nextSibling
-    if(event.target.value.length >0 && proximo !== null){
-        proximo.focus()
+const inserValues = (event)=>{
+    if(event.which !== 13){
+        const proximo = event.target.nextSibling
+        if(event.target.value.length >0 && proximo !== null){
+            proximo.focus()
+        }
+    }
+    if(event.target.value === '\n'){
+        event.target.value = ''
     }
 }
 
@@ -97,6 +112,8 @@ const cleanTextArea = () =>{
     for(let i  = 0; i <paragrafs.length; i +=1 ){
         paragrafs[i].value = ''
     }
+    paragrafs[0].focus()
+    answer = []
 }
 
 const afterHit =()=>{
@@ -135,22 +152,29 @@ const endGame =  ()=>{
     setTimeout(cleanScreen,3000)
 }
 
-const sendAnswer = ()=>{
-    const paragrafs = document.querySelectorAll('.line')
-    for(let i = 0;i<paragrafs.length ;i+=1){
-        answer.push(paragrafs[i].value)
+const catchValues = ()=>{
+    const lines = document.querySelectorAll('.line')
+    for( let i = 0; i<lines.length ; i +=1){
+        answer.push(lines[i].value)
     }
+    console.log(answer)
     answer = answer.toString()
     answer = answer.replaceAll(',','')
+}
+
+const sendAnswer = ()=>{
+    answer = []
+    catchValues()
     console.log(word)
-    if(answer.toLowerCase() === word.toLowerCase()){
-        correctAnswer = true
-    }else{
-        wrongAnswer()
-    }
-    if(correctAnswer === true || attempts <1){
-        endGame()
-    }
+    console.log(answer)
+        if(answer.toLowerCase() === word.toLowerCase()){
+            correctAnswer = true
+        }else{
+            wrongAnswer()
+        }
+        if(correctAnswer === true || attempts <1){
+            endGame()
+        }
 }
 
 const renderLines = (gameContainer) =>{
@@ -163,7 +187,7 @@ const renderLines = (gameContainer) =>{
         line.className = 'line'
         line.maxLength = 1
         lettersContainer.appendChild(line)
-        line.addEventListener('keyup',catchValues)
+        line.addEventListener('keyup',inserValues)
     }
 }
 
@@ -172,6 +196,10 @@ const renderButtonAnswer = (gameContainer)=>{
     button.id = 'buttonAnswer'
     button.innerHTML = 'Capturar'
     button.addEventListener('click',sendAnswer)
+    const userAgent = navigator.userAgent.toLowerCase();
+    if( userAgent.search(/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i)!= -1 ){
+        button.style.fontSize = '25px'
+    }
     gameContainer.appendChild(button)
 }
 
@@ -203,6 +231,19 @@ const startGame = async() =>{
 }
 
 const iniciando = ()=> {
-    loadScreen(startGame)
+    buttonPlay.disabled = true
+    darkness(startGame)
 }
 buttonPlay.addEventListener('click',iniciando)
+
+document.addEventListener('keypress',function(key){
+    if(key.which === 13){
+        catchValues()
+        if(answer.length === word.length){
+            sendAnswer()
+        }else{
+            answer = []
+        }
+    }
+    
+})
