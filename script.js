@@ -43,7 +43,7 @@ const renderMenu = ()=>{
 }
 
 const darkness = (afterLoad) =>{
-    body.style.animation = '0.5s ease-in escurecer 0.5s'
+    body.style.animation = '0.5s ease-in darken 0.5s'
     const loadScreen = ()=>{
         const oldGif = document.querySelectorAll('.gifLoad')
         if(oldGif.length >0){
@@ -79,7 +79,7 @@ const win =()=>{
 
 const loose = ()=>{
     const button = document.querySelector('#buttonAnswer')
-    button.innerHTML = `Você errou !
+    button.innerHTML = `Ele fugiu!
     O pokemon era: <h4>${word.toUpperCase()}</h4>`
 }
 const getPokemon = async(pokemonNumber)=>{
@@ -165,9 +165,11 @@ const endGame =  ()=>{
     if( correctAnswer === true){
         win()
     }else{
+        const pokemon = document.querySelector('.pokemon')
+        pokemon.style.animation = '2.7s ease-in flee 0.1s'
         loose()
     }
-    setTimeout(cleanScreen,2000)
+    setTimeout(cleanScreen,1500)
 }
 
 const catchValues = ()=>{

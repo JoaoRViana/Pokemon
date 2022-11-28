@@ -53,7 +53,7 @@ body{
     color:#ff8b32 ;
 }
 
-@keyframes escurecer {
+@keyframes darken {
     to {
         filter: brightness(0%)
     }
@@ -75,6 +75,11 @@ body{
 
 .pokemon {
     margin-top: 25vh;
+}
+@keyframes flee {
+    to{
+        margin-left: 200vh ;
+    }
 }
 
 .line {
