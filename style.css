@@ -21,29 +21,31 @@ body{
 }
 
 #menuContainer {
-    height: 80vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 100vh;
+    display: inline;
 }
 
 #title {
-    padding: 20px;
+    padding: 50px;
     font-size: 50px;
+    height: 60px;
     color: #b22222;
     font-style: italic;
 }
 
-#menuContainer ul {
-    list-style: none;
+
+#buttonsMenu {
+    margin: 20vh;
+    display: inline-block;
+    height: 250px;
+    width: 150px ;
 }
 
-
-#playGame {
+.menuButton {
     width: 150px;
     height: 100px;
+    margin: 10px 0px;
     background-color: #f4f9fc;
-    margin: 2px;
     font-size: 20px;
     box-shadow: inset 3px 3px  #4d4d4d;
     border-radius: 10%;
@@ -60,12 +62,12 @@ body{
     }
 }
 
-#playGame:hover {
+.menuButton:hover {
     background-color: #ff8b32;
     color: #f4f9fc;
 
 }
-#playGame:active {
+.menuButton:active {
     width: 130px;
     height: 80px;
     box-shadow: inset 3px black;
@@ -132,4 +134,29 @@ h4{
 .gifLoad {
     margin-top: 25vh;
     width: 30vh;
+}
+
+#inputTrainer {
+    width: 150px;
+    height: 50px;
+    border-radius: 10%;
+    text-align: center;
+}
+#inputTitle {
+    color: #ff8b32;
+}
+
+#pokedexContainer {
+    margin-right: 10px;
+    font-size: 20px;
+    float: right;
+    height: auto;
+    background-color: #f4f9fc;
+    color: #b22222;
+    border-radius: 10%;
+    padding: 10px;
+}
+
+ul {
+    list-style-type: none;
 }

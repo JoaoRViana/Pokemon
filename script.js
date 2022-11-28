@@ -4,23 +4,32 @@ const game = document.querySelector('#game')
 const menuContainer = document.querySelector('#menuContainer')
 const title = document.querySelector('#title')
 const body = document.querySelector('body')
+const buttonTrainer  = document.querySelector('#trainerButton')
+const buttonsMenu = document.querySelector('#buttonsMenu')
 let correctAnswer = false
 let answer = []
 let attempts = 3
 let word = ''
+let number;
+let trainerName = ''
+let notName = true
+let timer = false
 
 const randomNumber = ()=>{
-    const number = Math.round((Math.random()*151))
+    number = Math.round((Math.random()*151))
     return number.toString()
 }
 
 
 const cleanScreen = ()=>{
-    darkness(renderMenu)
     answer = []
     attempts = 3
     correctAnswer = false
     buttonPlay.disabled = false
+    if(trainerName.length < 1){
+        notName = true
+    }
+    darkness(renderMenu)
 }
 const renderMenu = ()=>{
     const gifLoad = document.querySelector('.gifLoad')
@@ -29,7 +38,7 @@ const renderMenu = ()=>{
     body.style.backgroundSize = 'cover'
     body.style.height = '100vh'
     title.style.display = ''
-    menuContainer.style.display = 'flex'
+    menuContainer.style.display = 'inline'
 
 }
 
@@ -60,6 +69,11 @@ const darkness = (afterLoad) =>{
 
 const win =()=>{
     const button = document.querySelector('#buttonAnswer')
+    if(trainerName !== ''){
+        let pokedex = JSON.parse(localStorage.getItem(trainerName))
+        pokedex[number] = word
+        localStorage.setItem(trainerName,JSON.stringify(pokedex))
+    }
     button.innerHTML = 'Parabéns você acertou'
 }
 
@@ -138,6 +152,10 @@ const wrongAnswer = () =>{
     }
 }
 
+const CountTime = () =>{
+    timer = true
+    return timer
+}
 
 const endGame =  ()=>{
     const buttonAnswer = document.querySelector('#buttonAnswer')
@@ -149,7 +167,7 @@ const endGame =  ()=>{
     }else{
         loose()
     }
-    setTimeout(cleanScreen,3000)
+    setTimeout(cleanScreen,2000)
 }
 
 const catchValues = ()=>{
@@ -157,7 +175,6 @@ const catchValues = ()=>{
     for( let i = 0; i<lines.length ; i +=1){
         answer.push(lines[i].value)
     }
-    console.log(answer)
     answer = answer.toString()
     answer = answer.replaceAll(',','')
 }
@@ -165,8 +182,6 @@ const catchValues = ()=>{
 const sendAnswer = ()=>{
     answer = []
     catchValues()
-    console.log(word)
-    console.log(answer)
         if(answer.toLowerCase() === word.toLowerCase()){
             correctAnswer = true
         }else{
@@ -183,7 +198,7 @@ const renderLines = (gameContainer) =>{
     lettersContainer.style.display ='flex'
     lettersContainer.style.justifyContent = 'center'
     for( let  i =0; i<word.length ; i += 1){
-        const line = document.createElement('textarea')
+        const line = document.createElement('input')
         line.className = 'line'
         line.maxLength = 1
         lettersContainer.appendChild(line)
@@ -226,24 +241,137 @@ const startGame = async() =>{
     renderLines(gameContainer);
     renderButtonAnswer(gameContainer)
     renderAttempts(gameContainer)
-    const arr = [word]
-    return arr
+    document.addEventListener('keypress',function(key){
+        if((correctAnswer === false || attempts < 1)){
+            if(key.which === 13 && setTimeout(CountTime,1000)){
+                catchValues()
+                if(answer.length === word.length ){
+                    sendAnswer()
+                }else{
+                    answer = []
+                }
+            }
+        
+        }
+    })
+    const lines = document.querySelectorAll('.line')
+    lines[0].focus()
+
+}
+
+
+const removeInputTrainer = ()=>{
+    const input = document.querySelector('#inputTrainer')
+    const inputTitle= document.querySelector('#inputTitle')
+    input.remove()
+    inputTitle.remove()
+    buttonTrainer.addEventListener('click',renderInputTrainer)
+    buttonTrainer.removeEventListener('click',removeInputTrainer)
+
+}
+
+const renderTrainerName =()=>{
+    const inputTitle = document.querySelector('#inputTitle')
+    const inputName = document.querySelector('#inputTrainer')
+    const titleName = document.createElement('h3')
+    const title = document.querySelector('#title')
+    titleName.innerHTML = `Bem vindo ${trainerName}`
+    title.appendChild(titleName)
+    buttonTrainer.remove()
+    inputTitle.remove()
+    inputName.remove()
+}
+
+const catchTrainerName = () =>{
+    const trainer = document.querySelector('#inputTrainer')
+    trainerName = trainer.value
+    if(trainerName.length > 1 ){
+        const getTrainer = localStorage.getItem(trainerName)
+        let pokedex = localStorage.getItem(trainerName.pokedex)
+        if(pokedex === null){
+            pokedex ={}
+        }
+        if(getTrainer === null){
+            localStorage.setItem(trainerName,JSON.stringify(pokedex))
+        }
+        notName = false
+        renderTrainerName()
+        renderButtonPokedex()
+    }
+    else{
+        alert('nome inválido')
+    }
+}
+
+
+const renderInputTrainer = ()=>{
+    buttonTrainer.disabled = true
+    const input = document.createElement('input')
+    const inputTitle = document.createElement('h4')
+    inputTitle.innerHTML = 'Qual seu nome?'
+    input.id = 'inputTrainer'
+    inputTitle.id = 'inputTitle'
+    buttonsMenu.appendChild(inputTitle)
+    buttonsMenu.appendChild(input)
+    if(buttonTrainer.disabled === true){
+        buttonTrainer.disabled = false
+        buttonTrainer.removeEventListener('click',renderInputTrainer)
+        buttonTrainer.addEventListener('click',removeInputTrainer)
+    }
+    document.addEventListener('keypress',function(key){
+        if(key.which === 13 && notName == true){
+            catchTrainerName()
+        }
+    })
+    input.focus()
 }
 
 const iniciando = ()=> {
-    buttonPlay.disabled = true
+    notName = false
     darkness(startGame)
 }
 buttonPlay.addEventListener('click',iniciando)
+buttonTrainer.addEventListener('click',renderInputTrainer)
 
-document.addEventListener('keypress',function(key){
-    if(key.which === 13){
-        catchValues()
-        if(answer.length === word.length){
-            sendAnswer()
-        }else{
-            answer = []
-        }
+const removePokedex = () =>{
+    const buttonPokedex = document.querySelector('#buttonPokedex')
+    const pokedexContainer = document.querySelector('#pokedexContainer')
+    pokedexContainer.remove()
+    buttonsMenu.style.marginLeft = ''
+    buttonPokedex.removeEventListener('click',removePokedex)
+    buttonPokedex.addEventListener('click',renderPokedex)
+
+}
+
+
+const renderPokedex = ()=>{
+    const buttonPokedex = document.querySelector('#buttonPokedex')
+    const pokedexContainer = document.createElement('aside')
+    pokedexContainer.id = 'pokedexContainer'
+    pokedexContainer.innerHTML = 'Pokemons que você já capturou:'
+    const listPokedex = document.createElement('ul')
+    pokedexContainer.appendChild(listPokedex)
+    let pokedex = JSON.parse(localStorage.getItem(trainerName))
+    let len = Object.keys(pokedex).length
+    for(let i = 0 ; i < len; i+=1){
+        const li = document.createElement('li')
+        li.innerHTML = `nº ${Object.keys(pokedex)[i]}: <u>${Object.values(pokedex)[i]}</u>`
+        listPokedex.appendChild(li)
     }
-    
-})
+    buttonsMenu.style.marginLeft = '56.4vh'
+    buttonPokedex.addEventListener('click',removePokedex)
+    menuContainer.appendChild(pokedexContainer)
+    pokedexContainer.appendChild(listPokedex)
+    buttonPokedex.removeEventListener('click',renderPokedex)
+
+}
+
+const renderButtonPokedex = () =>{
+    const buttonPokedex = document.createElement('button')
+    buttonPokedex.className = 'menuButton'
+    buttonPokedex.id = 'buttonPokedex'
+    buttonPokedex.innerHTML = 'Pokedex'
+    buttonsMenu.appendChild(buttonPokedex)
+    buttonPokedex.addEventListener('click',renderPokedex)
+}
+
