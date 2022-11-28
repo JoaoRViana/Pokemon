@@ -78,7 +78,7 @@ body{
 }
 @keyframes flee {
     to{
-        margin-left: 200vh ;
+        margin-left: 180vh ;
     }
 }
 
@@ -149,6 +149,10 @@ h4{
 }
 #inputTitle {
     color: #ff8b32;
+}
+
+#buttonPokedex:hover {
+    background-color: #943341;
 }
 
 #pokedexContainer {
