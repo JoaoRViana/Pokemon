@@ -14,6 +14,12 @@ let number;
 let trainerName = ''
 let notName = true
 let timer = false
+let mobile = false
+const userAgent = navigator.userAgent.toLowerCase();
+if( userAgent.search(/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i)!= -1 ){
+    mobile = true
+}
+
 
 const randomNumber = ()=>{
     number = Math.round((Math.random()*151))
@@ -213,10 +219,7 @@ const renderButtonAnswer = (gameContainer)=>{
     button.id = 'buttonAnswer'
     button.innerHTML = 'Capturar'
     button.addEventListener('click',sendAnswer)
-    const userAgent = navigator.userAgent.toLowerCase();
-    if( userAgent.search(/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i)!= -1 ){
-        button.style.fontSize = '25px'
-    }
+    mobile === true?button.style.fontSize = '25px':false
     gameContainer.appendChild(button)
 }
 
@@ -275,10 +278,7 @@ const removeInputTrainer = ()=>{
 const renderTrainerName =()=>{
     const inputTitle = document.querySelector('#inputTitle')
     const inputName = document.querySelector('#inputTrainer')
-    const titleName = document.createElement('h3')
-    const title = document.querySelector('#title')
-    titleName.innerHTML = `Bem vindo ${trainerName}`
-    title.appendChild(titleName)
+    title.innerHTML = `Bem vindo ${trainerName}`
     buttonTrainer.remove()
     inputTitle.remove()
     inputName.remove()
@@ -298,7 +298,7 @@ const catchTrainerName = () =>{
         }
         notName = false
         renderTrainerName()
-        renderButtonPokedex()
+        mobile === true?false:renderButtonPokedex();
     }
     else{
         alert('nome inválido')
