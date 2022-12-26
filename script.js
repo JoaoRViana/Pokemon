@@ -49,7 +49,6 @@ const renderMenu = ()=>{
 }
 
 const darkness = (afterLoad) =>{
-    body.style.animation = '0.5s ease-in darken 0.5s'
     const loadScreen = ()=>{
         const oldGif = document.querySelectorAll('.gifLoad')
         if(oldGif.length >0){
@@ -330,7 +329,8 @@ const renderInputTrainer = ()=>{
 
 const iniciando = ()=> {
     notName = false
-    darkness(startGame)
+    window.onload = darkness(startGame)
+
 }
 buttonPlay.addEventListener('click',iniciando)
 buttonTrainer.addEventListener('click',renderInputTrainer)
@@ -360,7 +360,7 @@ const renderPokedex = ()=>{
         li.innerHTML = `nº ${Object.keys(pokedex)[i]}: <u>${Object.values(pokedex)[i]}</u>`
         listPokedex.appendChild(li)
     }
-    buttonsMenu.style.marginLeft = '56.4vh'
+    buttonsMenu.style.marginLeft = '30.1vw'
     buttonPokedex.addEventListener('click',removePokedex)
     menuContainer.appendChild(pokedexContainer)
     pokedexContainer.appendChild(listPokedex)
