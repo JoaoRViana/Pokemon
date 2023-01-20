@@ -79,7 +79,7 @@ const win =()=>{
         pokedex[number] = word
         localStorage.setItem(trainerName,JSON.stringify(pokedex))
     }
-    button.innerHTML = 'Parabéns você acertou'
+    button.innerHTML = `Parabéns você acertou é o <h4>${word.toUpperCase()}</h4>`
 }
 
 const loose = ()=>{
@@ -130,8 +130,10 @@ const cleanTextArea = () =>{
     const paragrafs =document.querySelectorAll('.line')
     for(let i  = 0; i <paragrafs.length; i +=1 ){
         paragrafs[i].value = ''
-    }if(mobile === false){
-        paragrafs[0].focus()
+    };
+    paragrafs[0].focus();
+    if(mobile === true){
+        paragrafs[0].blur()
     }
     answer = []
 }
@@ -170,6 +172,7 @@ const endGame =  ()=>{
     pokemon.style.filter = 'brightness(100%)'
     if( correctAnswer === true){
         win()
+        cleanTextArea()
     }else{
         const pokemon = document.querySelector('.pokemon')
         pokemon.style.animation = '2.7s ease-in flee 0.1s'
