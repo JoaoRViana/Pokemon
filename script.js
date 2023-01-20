@@ -130,8 +130,9 @@ const cleanTextArea = () =>{
     const paragrafs =document.querySelectorAll('.line')
     for(let i  = 0; i <paragrafs.length; i +=1 ){
         paragrafs[i].value = ''
+    }if(mobile === false){
+        paragrafs[0].focus()
     }
-    paragrafs[0].focus()
     answer = []
 }
 
